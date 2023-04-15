@@ -1,2 +1,3 @@
 # graphics-projector
-A project creator for new graphics projects to burn through boilerplate.
+> Because creating graphics projects requires a lot of code to even get
+> going.
