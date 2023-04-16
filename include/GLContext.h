@@ -7,18 +7,12 @@
 #include <iostream>
 #include <cstdlib>
 
-#include "Triangle.h"
-// #include "Camera.h"
 #include "Scene.h"
 
-#ifndef __GL_PROJECT_H__
-#define __GL_PROJECT_H__
+#ifndef __GL_CONTEXT_H__
+#define __GL_CONTEXT_H__
 
-/**
- * Creates a window using GLFW of a particular size and initializes all
- * GL-related functionality.
- */
-class GLProject {
+class GLContext {
     GLFWwindow* mWindow;
     Scene* mScene = NULL;
 
@@ -26,9 +20,8 @@ class GLProject {
     double mLastMouseY;
 
     public:
-
-        GLProject(int screenW, int screenH);
-        ~GLProject();
+        GLContext(int screenW, int screenH);
+        ~GLContext();
 
         void setScene(Scene* s);
         GLFWwindow* getWindow() { return mWindow; }
@@ -42,4 +35,4 @@ class GLProject {
         void mouseCallback(double xPos, double yPos);
 };
 
-#endif
+#endif // __GL_CONTEXT_H__

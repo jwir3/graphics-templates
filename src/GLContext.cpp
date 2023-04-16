@@ -1,15 +1,15 @@
-#include "GLProject.h"
+#include "GLContext.h"
 
-#include <vector>
+// #include <vector>
 
 using namespace std;
 
-GLProject::GLProject(int screenW, int screenH)
+GLContext::GLContext(int screenW, int screenH)
   : mLastMouseX(screenW/2.0), mLastMouseY(screenH/2.0) {
     initGL(screenW, screenH);
 }
 
-void GLProject::initGL(int screenW, int screenH) {
+void GLContext::initGL(int screenW, int screenH) {
     // Initialise GLFW
 	if (!glfwInit()) {
         cerr << "Failed to initialize GLFW" << endl;
@@ -52,24 +52,24 @@ void GLProject::initGL(int screenW, int screenH) {
 	glfwSetInputMode(mWindow, GLFW_STICKY_KEYS, GL_TRUE);
 }
 
-GLProject::~GLProject() {
+GLContext::~GLContext() {
 	// Close OpenGL window and terminate GLFW
 	glfwTerminate();
 }
 
-void GLProject::setScene(Scene* s) {
+void GLContext::setScene(Scene* s) {
 	// cout << "Setting scene..." << endl;
 	mScene = s;
 
-	GLProject* myProject = this;
-    glfwSetWindowUserPointer(getWindow(), myProject);
+	GLContext* myContext = this;
+    glfwSetWindowUserPointer(getWindow(), myContext);
 
     auto keyCallbackFunc = [](GLFWwindow* w, int key, int scancode, int action, int mods) {
-        static_cast<GLProject*>(glfwGetWindowUserPointer(w))->keyCallback(key, scancode, action, mods);
+        static_cast<GLContext*>(glfwGetWindowUserPointer(w))->keyCallback(key, scancode, action, mods);
     };
 
 	auto mouseCallbackFunc = [](GLFWwindow* w, double xpos, double ypos) {
-		static_cast<GLProject*>(glfwGetWindowUserPointer(w))->mouseCallback(xpos, ypos);
+		static_cast<GLContext*>(glfwGetWindowUserPointer(w))->mouseCallback(xpos, ypos);
 	};
 
 	// Don't initialize the key or mouse callbacks until the scene is initialized, since it depends on the camera
@@ -79,7 +79,7 @@ void GLProject::setScene(Scene* s) {
 	// cout << "Done setting scene" << endl;
 }
 
-void GLProject::initiateRenderLoop(void (*draw) ()) {
+void GLContext::initiateRenderLoop(void (*draw) ()) {
 	if (mScene == NULL) {
 		cerr << "WARNING: Attempted to initiate render loop before scene was loaded! This will silently return." << endl;
 		return;
@@ -97,8 +97,8 @@ void GLProject::initiateRenderLoop(void (*draw) ()) {
            && glfwWindowShouldClose(getWindow()) == 0 );
 }
 
-void GLProject::keyCallback(int key, int scancode, int action, int mods) {
-	// TODO: It would be cool if we could eliminate GLProject's dependency on the scene. Ultimately,
+void GLContext::keyCallback(int key, int scancode, int action, int mods) {
+	// TODO: It would be cool if we could eliminate GLContext's dependency on the scene. Ultimately,
 	//       all we really need is the screen width and height to create the window.
 	if (action == GLFW_PRESS || action == GLFW_REPEAT) {
 		if (key == GLFW_KEY_W) {
@@ -121,7 +121,7 @@ void GLProject::keyCallback(int key, int scancode, int action, int mods) {
 	}
 }
 
-void GLProject::mouseCallback(double xPos, double yPos) {
+void GLContext::mouseCallback(double xPos, double yPos) {
 	double differenceX = xPos - mLastMouseX;
 	double differenceY = yPos - mLastMouseY;
 

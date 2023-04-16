@@ -14,7 +14,7 @@
 #include <iostream>
 #include <vector>
 
-#include "GLProject.h"
+#include "GLContext.h"
 #include "Triangle.h"
 #include "GLVertex.h"
 #include "Camera.h"
@@ -75,11 +75,11 @@ int main( int argc, char* argv[]) {
 
     // TODO: Add a --help/usage statement.
 
-    GLProject p(screenW, screenH);
+    GLContext ctx(screenW, screenH);
     scene = buildScene(screenW, screenH);
-    p.setScene(scene);
+    ctx.setScene(scene);
 
-    p.initiateRenderLoop(draw);
+    ctx.initiateRenderLoop(draw);
 
 	return 0;
 }
