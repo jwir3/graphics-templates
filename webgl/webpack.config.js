@@ -23,6 +23,11 @@ module.exports = {
           "sass-loader",
         ],
       },
+      {
+        // Allow the importing of .glsl (GLSL shader files) as raw text
+        test: /\.glsl$/i,
+        use: "raw-loader",
+      },
     ],
   },
   output: {
