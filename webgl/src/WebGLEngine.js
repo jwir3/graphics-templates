@@ -1,10 +1,14 @@
-class WebGLEngine {
+export class WebGLEngine {
   constructor(id) {
     let canvas = document.getElementById(id);
 
     // The width and height (in CSS pixels)
     this.width = canvas.clientWidth;
     this.height = canvas.clientHeight;
+
+    console.log(
+      `Creating a WebGLEngine with size: ${this.width}x${this.height}`
+    );
 
     if (!canvas) {
       throw new Error(
@@ -48,5 +52,3 @@ class WebGLEngine {
     });
   }
 }
-
-export { WebGLEngine };

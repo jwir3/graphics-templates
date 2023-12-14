@@ -32,3 +32,5 @@
 *.app
 
 build/**
+webgl/dist/**
+webgl/node_modules
