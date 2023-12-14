@@ -6,8 +6,9 @@ function onInitialLoad(id) {
 }
 
 // export const name = "main";
-import { WebGLContext } from "./WebGLContext.js";
+import { WebGLEngine } from "./WebGLEngine.js";
 
 document.body.onload = () => {
-  let context = new WebGLContext("webgl");
+  let engine = new WebGLEngine("webgl");
+  engine.startRenderLoop();
 };
