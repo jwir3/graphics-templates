@@ -4,6 +4,13 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 module.exports = {
   entry: "./src/index.js",
   mode: "development",
+  devServer: {
+    static: {
+      directory: path.join(__dirname, "dist"),
+    },
+    port: 9000,
+    open: true,
+  },
   plugins: [
     new HtmlWebpackPlugin({
       title: "Graphics Projector: An Easy Template for WebGL Projects",

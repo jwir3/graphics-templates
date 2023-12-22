@@ -1,6 +1,6 @@
 import { StringUtil } from "./util/StringUtil";
-import flatVertexShader from "../../shaders/FlatShader.vert.glsl";
-import flatFragmentShader from "../../shaders/FlatShader.frag.glsl";
+import flatVertexShader from "../shaders/FlatShader.vert.glsl";
+import flatFragmentShader from "../shaders/FlatShader.frag.glsl";
 import { Vertex3 } from "./Vertex3";
 import { Triangle } from "./Triangle";
 import { Scene } from "./Scene";
