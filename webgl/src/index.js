@@ -5,7 +5,7 @@ import "./style/scss/index.scss";
 
 document.body.onload = () => {
   console.log(
-    `Graphics Projector (WebGL Version ${packageJson.version}) was used to create this project`
+    `Graphics Template (WebGL Version ${packageJson.version}) was used to create this project`
   );
   console.log(
     "Find out more at https://www.github.com/jwir3/graphics-projector"

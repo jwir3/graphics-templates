@@ -1,6 +1,8 @@
 import { StringUtil } from "./util/StringUtil";
 import flatVertexShader from "../../shaders/FlatShader.vert.glsl";
 import flatFragmentShader from "../../shaders/FlatShader.frag.glsl";
+import { Vertex3 } from "./Vertex3";
+import { Triangle } from "./Triangle";
 
 export class WebGLEngine {
   constructor(id) {
@@ -9,6 +11,15 @@ export class WebGLEngine {
     // The width and height (in CSS pixels)
     this.width = canvas.clientWidth;
     this.height = canvas.clientHeight;
+
+    // The "scene" (which is just a triangle for now).
+    // By default, WebGL has a world coordinate system ranging (-1.0, 1.0) in all three directions,
+    // with origin at (0.0, 0.0, 0.0);
+    this.scene = new Triangle([
+      new Vertex3(-1.0, -1.0, 0.0),
+      new Vertex3(1.0, -1.0, 0.0),
+      new Vertex3(1.0, 1.0, 0.0),
+    ]);
 
     console.log(
       `Creating a WebGLEngine with size: ${this.width}x${this.height}`
@@ -28,6 +39,7 @@ export class WebGLEngine {
     }
 
     this.setupShaders(flatVertexShader, flatFragmentShader);
+    this.scene.setupBuffers(this.gl);
   }
 
   setupShaders(vertexShaderSource, fragmentShaderSource) {
@@ -100,6 +112,11 @@ export class WebGLEngine {
     // Set up the viewport. This sets up the transformation from normalized device coordinates
     // to screen coordinates.
     this.gl.viewport(0, 0, this.width, this.height);
+
+    // Enable the shader program that we've already linked and prepared.
+    this.gl.useProgram(this.shaderProgram);
+
+    this.scene.draw(this.gl, this.shaderProgram);
 
     // We continue rendering by refreshing the frame and calling this.draw() when the next frame will be
     // rendered.
