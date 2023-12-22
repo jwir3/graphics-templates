@@ -1,8 +1,14 @@
+import { mat4 } from "gl-matrix";
+
 export class Triangle {
   constructor(points, shaderProgram) {
     if (points.length !== 3) {
       throw new Error(`Triangle can only be initialized with three points.`);
     }
+
+    // This is the transformation from model coordinates to world coordinates
+    // for this triangle. We initialize it with the identity matrix.
+    this.modelMatrix = mat4.create();
 
     this.positions = [];
     points.forEach((nextVertex) => {
@@ -57,10 +63,44 @@ export class Triangle {
     gl.bindBuffer(gl.ARRAY_BUFFER, null);
   }
 
+  setModelViewTransform(mvMatrix) {
+    this.modelViewTransform = mvMatrix;
+  }
+
+  setScene(scene) {
+    this.scene = scene;
+  }
+
+  getScene() {
+    return this.scene;
+  }
+
+  setModelTransform(modelMatrix) {
+    this.modelMatrix = modelMatrix;
+  }
+
   draw(gl) {
     // Enable the shader program that we've already linked, prepared
     // and added as part of this object.
     gl.useProgram(this.shaderProgram);
+
+    const modelViewTransformLocation = gl.getUniformLocation(
+      this.shaderProgram,
+      "modelViewProjection"
+    );
+
+    // Apply the model transformation
+    let modelViewProjectionMatrix = mat4.create();
+    mat4.multiply(
+      modelViewProjectionMatrix,
+      this.getScene().getCamera().getViewProjectionMatrix(),
+      this.modelMatrix
+    );
+    gl.uniformMatrix4fv(
+      modelViewTransformLocation,
+      false,
+      modelViewProjectionMatrix
+    );
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
