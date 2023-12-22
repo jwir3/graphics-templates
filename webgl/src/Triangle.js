@@ -1,5 +1,5 @@
 export class Triangle {
-  constructor(points) {
+  constructor(points, shaderProgram) {
     if (points.length !== 3) {
       throw new Error(`Triangle can only be initialized with three points.`);
     }
@@ -12,6 +12,8 @@ export class Triangle {
     });
 
     this.indices = [0, 1, 2];
+
+    this.shaderProgram = shaderProgram;
   }
 
   getIndices() {
@@ -55,11 +57,15 @@ export class Triangle {
     gl.bindBuffer(gl.ARRAY_BUFFER, null);
   }
 
-  draw(gl, shaderProgram) {
+  draw(gl) {
+    // Enable the shader program that we've already linked, prepared
+    // and added as part of this object.
+    gl.useProgram(this.shaderProgram);
+
     gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
 
-    let position = gl.getAttribLocation(shaderProgram, "position");
+    let position = gl.getAttribLocation(this.shaderProgram, "position");
 
     // Tell WebGL what the data in the buffer(s) actually represents, using a
     // vertex array object.

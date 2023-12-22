@@ -10,6 +10,6 @@ document.body.onload = () => {
   console.log(
     "Find out more at https://www.github.com/jwir3/graphics-projector"
   );
-  let engine = new WebGLEngine("webgl");
+  let engine = new WebGLEngine("webgl", 500, 500);
   engine.startRenderLoop();
 };

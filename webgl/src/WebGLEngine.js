@@ -3,27 +3,31 @@ import flatVertexShader from "../../shaders/FlatShader.vert.glsl";
 import flatFragmentShader from "../../shaders/FlatShader.frag.glsl";
 import { Vertex3 } from "./Vertex3";
 import { Triangle } from "./Triangle";
+import { Scene } from "./Scene";
 
 export class WebGLEngine {
-  constructor(id) {
+  constructor(id, width, height) {
     let canvas = document.getElementById(id);
 
-    // The width and height (in CSS pixels)
-    this.width = canvas.clientWidth;
-    this.height = canvas.clientHeight;
-
-    // The "scene" (which is just a triangle for now).
-    // By default, WebGL has a world coordinate system ranging (-1.0, 1.0) in all three directions,
-    // with origin at (0.0, 0.0, 0.0);
-    this.scene = new Triangle([
-      new Vertex3(-1.0, -1.0, 0.0),
-      new Vertex3(1.0, -1.0, 0.0),
-      new Vertex3(1.0, 1.0, 0.0),
-    ]);
+    // Set the internal width and height used by the viewport call.
+    // This effectively only affects the clipping coordinates when we
+    // transform to those.
+    this.width = width;
+    this.height = height;
 
     console.log(
       `Creating a WebGLEngine with size: ${this.width}x${this.height}`
     );
+
+    // The width and height (in CSS pixels). This controls the width and height of the
+    // _DOM element_ displayed in the page.
+    canvas.style.clientWidth = this.width;
+    canvas.style.clientHeight = this.height;
+
+    // Set the size of the internal drawing surface. This surface is stretched or shrunk
+    // to meet the size of the DOM element.
+    canvas.setAttribute("width", this.width);
+    canvas.setAttribute("height", this.height);
 
     if (!canvas) {
       throw new Error(
@@ -39,7 +43,17 @@ export class WebGLEngine {
     }
 
     this.setupShaders(flatVertexShader, flatFragmentShader);
-    this.scene.setupBuffers(this.gl);
+    this.scene = new Scene(this.gl);
+    this.scene.addTriangle(
+      new Triangle(
+        [
+          new Vertex3(-1.0, -1.0, 0.0),
+          new Vertex3(1.0, -1.0, 0.0),
+          new Vertex3(1.0, 1.0, 0.0),
+        ],
+        this.shaderProgram
+      )
+    );
   }
 
   setupShaders(vertexShaderSource, fragmentShaderSource) {
@@ -113,10 +127,8 @@ export class WebGLEngine {
     // to screen coordinates.
     this.gl.viewport(0, 0, this.width, this.height);
 
-    // Enable the shader program that we've already linked and prepared.
-    this.gl.useProgram(this.shaderProgram);
-
-    this.scene.draw(this.gl, this.shaderProgram);
+    // Draw the entire scene.
+    this.scene.draw(this.gl);
 
     // We continue rendering by refreshing the frame and calling this.draw() when the next frame will be
     // rendered.
